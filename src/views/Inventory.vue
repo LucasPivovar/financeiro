@@ -16,6 +16,8 @@ const inventoryData = [
 const inventory = ref([...inventoryData]);
 
 const showVehicleModal = ref(false);
+const showInfoModal = ref(false);
+const selectedVehicle = ref(null);
 const showToast = inject('showToast');
 
 const submitVehicle = () => {
@@ -23,6 +25,11 @@ const submitVehicle = () => {
   if (showToast) {
     showToast('Veículo adicionado com sucesso!', 'success');
   }
+};
+
+const openVehicleInfo = (item) => {
+  selectedVehicle.value = item;
+  showInfoModal.value = true;
 };
 
 const handleEdit = (item) => {
@@ -106,7 +113,7 @@ const setPage = (page) => { currentPage.value = page; };
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in paginatedItems" :key="item.id">
+            <tr v-for="item in paginatedItems" :key="item.id" @click="openVehicleInfo(item)" class="clickable-row">
               <td>
                 <div class="vehicle-info">
                   <div class="vehicle-img-placeholder">
@@ -125,7 +132,7 @@ const setPage = (page) => { currentPage.value = page; };
                 <span class="status-dot" :class="{'available': item.status === 'Disponível', 'negotiating': item.status === 'Em negociação'}"></span>
                 {{ item.status }}
               </td>
-              <td class="actions-col">
+              <td class="actions-col" @click.stop>
                 <Dropdown :item="item" @edit="handleEdit" @delete="handleDelete" />
               </td>
             </tr>
@@ -186,6 +193,55 @@ const setPage = (page) => { currentPage.value = page; };
           <button type="submit" class="btn-primary">Adicionar Veículo</button>
         </div>
       </form>
+    </Modal>
+
+    <!-- Modal Detalhes do Veículo -->
+    <Modal :show="showInfoModal" title="Detalhes do Veículo" @close="showInfoModal = false">
+      <div v-if="selectedVehicle" class="vehicle-details">
+        <div class="vehicle-image-hero">
+          <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&q=80&w=800" alt="Vehicle Photo" class="hero-img" v-if="selectedVehicle.type === 'Carro'" />
+          <img src="https://images.unsplash.com/photo-1558981403-c5f9899a289f?auto=format&fit=crop&q=80&w=800" alt="Motorcycle Photo" class="hero-img" v-else-if="selectedVehicle.type === 'Moto'" />
+          <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&q=80&w=800" alt="Truck Photo" class="hero-img" v-else />
+          <div class="hero-overlay">
+            <span :class="`badge badge-${selectedVehicle.typeColor}`">{{ selectedVehicle.type }}</span>
+            <span class="plate-badge-large">{{ selectedVehicle.plate }}</span>
+          </div>
+        </div>
+        
+        <div class="vehicle-info-grid">
+          <div class="info-main">
+            <h2 class="vehicle-name-large">{{ selectedVehicle.name }}</h2>
+            <p class="vehicle-year-large">Ano {{ selectedVehicle.year }}</p>
+          </div>
+          <div class="info-price">
+            <span class="price-label">Valor de Venda</span>
+            <span class="price-value">{{ selectedVehicle.value }}</span>
+          </div>
+        </div>
+
+        <div class="vehicle-specs">
+          <div class="spec-item">
+            <span class="spec-label">Status</span>
+            <span class="spec-value">
+              <span class="status-dot" :class="{'available': selectedVehicle.status === 'Disponível', 'negotiating': selectedVehicle.status === 'Em negociação'}"></span>
+              {{ selectedVehicle.status }}
+            </span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">ID Sistema</span>
+            <span class="spec-value">#{{ selectedVehicle.id }}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Cadastrado</span>
+            <span class="spec-value">12/05/2024</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-outline" @click="showInfoModal = false">Fechar</button>
+          <button class="btn-primary" style="flex: 1;" @click="showInfoModal = false">Iniciar Negociação</button>
+        </div>
+      </div>
     </Modal>
   </div>
 </template>
@@ -394,5 +450,146 @@ export default {
     flex-direction: column;
     gap: 16px;
   }
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover td {
+  background-color: #F8FAFC !important;
+}
+
+.vehicle-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.vehicle-image-hero {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plate-badge-large {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1A1C23;
+  box-shadow: var(--shadow-sm);
+}
+
+.vehicle-info-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.info-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.vehicle-name-large {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.vehicle-year-large {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.info-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.price-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.price-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.vehicle-specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.spec-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.spec-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn-outline {
+  padding: 12px 24px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  background-color: var(--bg-color);
 }
 </style>

@@ -61,7 +61,10 @@ const lineChartData = {
       pointBorderColor: '#fff',
       pointBorderWidth: 2,
       pointRadius: 0,
-      pointHoverRadius: 6,
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: '#6322F2',
+      pointHoverBorderColor: '#fff',
+      pointHoverBorderWidth: 3,
     }
   ]
 };
@@ -119,6 +122,7 @@ const donutChartData = {
       hoverBackgroundColor: ['#501AC3', '#D97706', '#2563EB'],
       borderWidth: 0,
       cutout: '70%',
+      hoverOffset: 15,
     }
   ]
 };
