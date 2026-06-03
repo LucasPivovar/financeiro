@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, computed } from 'vue';
 import Modal from '../components/Modal.vue';
 import { 
   ShoppingCart, 
@@ -14,13 +14,29 @@ import {
   ChevronDown
 } from '@lucide/vue';
 
-// Data placeholders for mockup
-const summaryCards = [
-  { title: 'Vendas', value: '18', change: '+ 28% vs mês anterior', changeType: 'positive', icon: ShoppingCart, color: 'purple' },
-  { title: 'Clientes', value: '127', change: '+ 16% vs mês anterior', changeType: 'positive', icon: Users, color: 'green' },
-  { title: 'Propostas enviadas', value: '43', change: '+ 12% vs mês anterior', changeType: 'positive', icon: FileText, color: 'blue' },
-  { title: 'Comissões', value: 'R$ 18.450,00', change: '+ 32% vs mês anterior', changeType: 'positive', icon: DollarSign, color: 'yellow' },
-];
+const periodData = {
+  '7days': [
+    { title: 'Vendas', value: '18', change: '+ 28% vs semana anterior', changeType: 'positive', icon: ShoppingCart, color: 'purple' },
+    { title: 'Clientes', value: '127', change: '+ 16% vs semana anterior', changeType: 'positive', icon: Users, color: 'green' },
+    { title: 'Propostas enviadas', value: '43', change: '+ 12% vs semana anterior', changeType: 'positive', icon: FileText, color: 'blue' },
+    { title: 'Comissões', value: 'R$ 18.450,00', change: '+ 32% vs semana anterior', changeType: 'positive', icon: DollarSign, color: 'yellow' },
+  ],
+  '30days': [
+    { title: 'Vendas', value: '54', change: '+ 15% vs mês anterior', changeType: 'positive', icon: ShoppingCart, color: 'purple' },
+    { title: 'Clientes', value: '382', change: '+ 8% vs mês anterior', changeType: 'positive', icon: Users, color: 'green' },
+    { title: 'Propostas enviadas', value: '145', change: '- 2% vs mês anterior', changeType: 'negative', icon: FileText, color: 'blue' },
+    { title: 'Comissões', value: 'R$ 45.200,00', change: '+ 10% vs mês anterior', changeType: 'positive', icon: DollarSign, color: 'yellow' },
+  ],
+  'year': [
+    { title: 'Vendas', value: '412', change: '+ 45% vs ano anterior', changeType: 'positive', icon: ShoppingCart, color: 'purple' },
+    { title: 'Clientes', value: '2.150', change: '+ 30% vs ano anterior', changeType: 'positive', icon: Users, color: 'green' },
+    { title: 'Propostas enviadas', value: '1.240', change: '+ 20% vs ano anterior', changeType: 'positive', icon: FileText, color: 'blue' },
+    { title: 'Comissões', value: 'R$ 380.500,00', change: '+ 50% vs ano anterior', changeType: 'positive', icon: DollarSign, color: 'yellow' },
+  ]
+};
+
+const selectedPeriod = ref('7days');
+const summaryCards = computed(() => periodData[selectedPeriod.value]);
 
 const latestProposals = [
   { initials: 'JS', client: 'João Silva', vehicle: 'Toyota Corolla XEi 2.0', value: 'R$ 110.000,00', status: 'Em análise', updated: 'Hoje, 10:30', color: 'purple', statusColor: 'warning' },
@@ -49,11 +65,11 @@ const submitProposal = () => {
         <p class="page-subtitle">Acompanhe o desempenho das suas vendas e propostas.</p>
       </div>
       <div class="header-actions">
-        <div class="date-picker">
-          <Calendar size="16" />
-          <span>12 a 18 de Mai de 2024</span>
-          <ChevronDown size="16" />
-        </div>
+        <select v-model="selectedPeriod" class="date-picker-select">
+          <option value="7days">Últimos 7 dias (12 a 18 de Mai)</option>
+          <option value="30days">Últimos 30 dias</option>
+          <option value="year">Este ano</option>
+        </select>
         <button class="btn-primary" @click="showProposalModal = true">
           <Plus size="18" />
           Nova Proposta
@@ -274,18 +290,28 @@ export default {
   align-items: center;
 }
 
-.date-picker {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+.date-picker-select {
+  padding: 8px 32px 8px 16px;
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  font-family: var(--font-family);
   font-size: 0.85rem;
   color: var(--text-main);
   font-weight: 500;
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.date-picker-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .summary-grid {
