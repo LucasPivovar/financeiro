@@ -83,7 +83,7 @@ const submitProposal = () => {
       <div class="card latest-proposals">
         <div class="card-header">
           <h2 class="section-title">Últimas propostas</h2>
-          <a href="#" class="view-all">Ver todas</a>
+          <router-link to="/proposals" class="view-all">Ver todas</router-link>
         </div>
         
         <div class="table-responsive">
@@ -126,7 +126,7 @@ const submitProposal = () => {
         <div class="card quick-actions">
           <h2 class="section-title">Ações rápidas</h2>
           <div class="action-list">
-            <button class="action-item">
+            <button class="action-item" @click="$router.push('/proposals')">
               <div class="action-icon icon-purple"><Plus size="20" /></div>
               <div class="action-text">
                 <span class="action-title">Nova Proposta</span>
@@ -134,7 +134,7 @@ const submitProposal = () => {
               </div>
               <ChevronRight size="16" class="action-arrow" />
             </button>
-            <button class="action-item">
+            <button class="action-item" @click="$router.push('/inventory')">
               <div class="action-icon icon-green"><Car size="20" /></div>
               <div class="action-text">
                 <span class="action-title">Adicionar Veículo</span>
@@ -142,7 +142,7 @@ const submitProposal = () => {
               </div>
               <ChevronRight size="16" class="action-arrow" />
             </button>
-            <button class="action-item">
+            <button class="action-item" @click="$router.push('/clients')">
               <div class="action-icon icon-blue"><Users size="20" /></div>
               <div class="action-text">
                 <span class="action-title">Novo Cliente</span>
@@ -164,7 +164,7 @@ const submitProposal = () => {
         <div class="card inventory-summary">
           <div class="card-header">
             <h2 class="section-title">Estoque de veículos</h2>
-            <a href="#" class="view-all">Ver todos</a>
+            <router-link to="/inventory" class="view-all">Ver todos</router-link>
           </div>
           <div class="inventory-total">
             <div class="total-icon"><Car size="24" /></div>
@@ -379,39 +379,11 @@ export default {
   color: var(--primary);
   font-size: 0.85rem;
   font-weight: 600;
+  text-decoration: none;
 }
 
 .view-all:hover {
   text-decoration: underline;
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.data-table th {
-  text-align: left;
-  padding: 12px 16px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
-}
-
-.data-table td {
-  padding: 16px;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.9rem;
-}
-
-.data-table tr:last-child td {
-  border-bottom: none;
-}
-
-.data-table tr:hover td {
-  background-color: #FAFAFA;
 }
 
 .client-cell {

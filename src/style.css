@@ -76,8 +76,15 @@ button {
 .card {
   background-color: var(--surface);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   padding: 24px;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-primary {
@@ -109,6 +116,63 @@ button {
 
 .badge.success { background-color: var(--success-bg); color: var(--success-text); }
 .badge.warning { background-color: var(--warning-bg); color: var(--warning-text); }
-.badge.danger { background-color: var(--danger-bg); color: var(--danger-text); }
+.badge-danger {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+}
 .badge.info { background-color: var(--info-bg); color: var(--info-text); }
 .badge.primary { background-color: var(--primary-light); color: var(--primary); }
+
+/* Page Transitions */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page-fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Global Data Table Styling */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 16px 24px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+.data-table tr {
+  transition: all 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+  background-color: #F8FAFC; /* Softer hover color */
+  box-shadow: inset 4px 0 0 0 var(--primary); /* Highlight row */
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}

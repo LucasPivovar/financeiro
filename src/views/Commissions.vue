@@ -54,7 +54,7 @@ const history = [
     <div class="card table-card">
       <div class="card-header">
         <h2 class="section-title">Histórico de comissões</h2>
-        <a href="#" class="view-all">Ver todas</a>
+        <router-link to="/reports" class="view-all">Ver todas</router-link>
       </div>
 
       <div class="table-responsive">
@@ -214,31 +214,11 @@ const history = [
   color: var(--primary);
   font-size: 0.85rem;
   font-weight: 600;
+  text-decoration: none;
 }
 
 .view-all:hover {
   text-decoration: underline;
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.data-table th {
-  text-align: left;
-  padding: 12px 24px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
-}
-
-.data-table td {
-  padding: 16px 24px;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.9rem;
 }
 
 .proposal-id {

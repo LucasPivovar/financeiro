@@ -21,7 +21,11 @@ const isAuthRoute = computed(() => {
   <div class="app-wrapper">
     <!-- Auth Layout -->
     <div v-if="isAuthRoute" class="auth-layout">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition name="page-fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </div>
 
     <!-- Dashboard Layout -->
@@ -30,7 +34,11 @@ const isAuthRoute = computed(() => {
       <div class="dashboard-main">
         <Topbar />
         <main class="page-content">
-          <router-view />
+          <router-view v-slot="{ Component }">
+            <transition name="page-fade" mode="out-in">
+              <component :is="Component" />
+            </transition>
+          </router-view>
         </main>
       </div>
     </div>
