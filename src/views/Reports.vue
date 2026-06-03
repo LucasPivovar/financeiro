@@ -62,6 +62,7 @@ const lineChartData = {
       pointBorderWidth: 2,
       pointRadius: 0,
       pointHoverRadius: 8,
+      pointHitRadius: 10,
       pointHoverBackgroundColor: '#6322F2',
       pointHoverBorderColor: '#fff',
       pointHoverBorderWidth: 3,
@@ -72,6 +73,10 @@ const lineChartData = {
 const lineChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
+  interaction: {
+    mode: 'index',
+    intersect: false,
+  },
   plugins: {
     legend: {
       display: false

@@ -11,9 +11,13 @@ const proposalsData = [
   { id: '#1244', client: 'Ana Paula', phone: '(11) 96666-4444', vehicle: 'Fiat Toro Volcano', year: 'Ano 2022', value: 'R$ 115.000,00', status: 'Enviada', statusColor: 'primary', created: 'Ontem, 14:20' },
   { id: '#1243', client: 'Rafael Ferreira', phone: '(11) 95555-5555', vehicle: 'VW Nivus Highline', year: 'Ano 2023', value: 'R$ 98.000,00', status: 'Reprovada', statusColor: 'danger', created: '12/05/2024' },
   { id: '#1242', client: 'Juliana Costa', phone: '(11) 97777-8888', vehicle: 'Yamaha MT-07', year: 'Ano 2024', value: 'R$ 45.000,00', status: 'Aprovada', statusColor: 'success', created: '10/05/2024' },
+  { id: '#1241', client: 'Felipe Rocha', phone: '(11) 99888-7777', vehicle: 'Chevrolet Tracker LTZ', year: 'Ano 2022', value: 'R$ 115.000,00', status: 'Em análise', statusColor: 'warning', created: '09/05/2024' },
+  { id: '#1240', client: 'Camila Lima', phone: '(11) 93333-2222', vehicle: 'Jeep Compass Limited', year: 'Ano 2023', value: 'R$ 155.000,00', status: 'Enviada', statusColor: 'primary', created: '08/05/2024' },
+  { id: '#1239', client: 'Roberto Alves', phone: '(11) 94444-1111', vehicle: 'Scania R450', year: 'Ano 2022', value: 'R$ 450.000,00', status: 'Aprovada', statusColor: 'success', created: '08/05/2024' },
 ];
 
 const proposals = ref([...proposalsData]);
+const filterStatus = ref('');
 
 const showProposalModal = ref(false);
 const showViewModal = ref(false);
@@ -47,13 +51,19 @@ const currentPage = ref(1);
 const itemsPerPage = 4;
 
 const filteredItems = computed(() => {
-  if (!searchQuery.value) return proposals.value;
-  const q = searchQuery.value.toLowerCase();
-  return proposals.value.filter(item => 
-    item.client.toLowerCase().includes(q) || 
-    item.vehicle.toLowerCase().includes(q) ||
-    item.id.toLowerCase().includes(q)
-  );
+  let result = proposals.value;
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase();
+    result = result.filter(item => 
+      item.client.toLowerCase().includes(q) || 
+      item.vehicle.toLowerCase().includes(q) ||
+      item.id.toLowerCase().includes(q)
+    );
+  }
+  if (filterStatus.value) {
+    result = result.filter(item => item.status === filterStatus.value);
+  }
+  return result;
 });
 
 const totalPages = computed(() => Math.ceil(filteredItems.value.length / itemsPerPage) || 1);
@@ -89,14 +99,13 @@ const setPage = (page) => { currentPage.value = page; };
           <input type="text" v-model="searchQuery" placeholder="Buscar por cliente, veículo ou ID..." @input="currentPage = 1" />
         </div>
         <div class="filter-actions">
-          <div class="dropdown">
-            <span>Todos os status</span>
-            <ChevronDown size="16" />
-          </div>
-          <div class="dropdown">
-            <span>Mais recentes</span>
-            <ChevronDown size="16" />
-          </div>
+          <select v-model="filterStatus" class="filter-select" @change="currentPage = 1">
+            <option value="">Todos os status</option>
+            <option value="Em análise">Em análise</option>
+            <option value="Aprovada">Aprovada</option>
+            <option value="Enviada">Enviada</option>
+            <option value="Reprovada">Reprovada</option>
+          </select>
         </div>
       </div>
 
@@ -302,18 +311,27 @@ const setPage = (page) => { currentPage.value = page; };
   gap: 12px;
 }
 
-.dropdown {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+.filter-select {
+  padding: 10px 32px 10px 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  font-family: var(--font-family);
   font-size: 0.9rem;
   color: var(--text-main);
-  font-weight: 500;
-  cursor: pointer;
   background-color: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.filter-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .client-info, .vehicle-info-sm {

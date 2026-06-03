@@ -11,9 +11,15 @@ const inventoryData = [
   { id: 4, name: 'Mercedes-Benz Accelo 1016', plate: 'ASD-9F87', type: 'Caminhão', typeColor: 'blue', year: '2021', value: 'R$ 160.000,00', status: 'Disponível', img: 'truck1' },
   { id: 5, name: 'Yamaha MT-07', plate: 'XYZ-9876', type: 'Moto', typeColor: 'yellow', year: '2024', value: 'R$ 45.000,00', status: 'Vendido', img: 'moto2' },
   { id: 6, name: 'Volkswagen T-Cross', plate: 'QWE-4567', type: 'Carro', typeColor: 'purple', year: '2021', value: 'R$ 105.000,00', status: 'Disponível', img: 'car3' },
+  { id: 7, name: 'Jeep Compass Limited', plate: 'PPA-8899', type: 'Carro', typeColor: 'purple', year: '2023', value: 'R$ 155.000,00', status: 'Em negociação', img: 'car4' },
+  { id: 8, name: 'Scania R450', plate: 'TRK-1122', type: 'Caminhão', typeColor: 'blue', year: '2022', value: 'R$ 450.000,00', status: 'Disponível', img: 'truck2' },
+  { id: 9, name: 'BMW F850 GS', plate: 'BMW-0850', type: 'Moto', typeColor: 'yellow', year: '2023', value: 'R$ 75.000,00', status: 'Disponível', img: 'moto3' },
+  { id: 10, name: 'Chevrolet Tracker LTZ', plate: 'CHV-0011', type: 'Carro', typeColor: 'purple', year: '2022', value: 'R$ 115.000,00', status: 'Vendido', img: 'car5' },
 ];
 
 const inventory = ref([...inventoryData]);
+const filterType = ref('');
+const filterStatus = ref('');
 
 const showVehicleModal = ref(false);
 const showInfoModal = ref(false);
@@ -47,12 +53,21 @@ const currentPage = ref(1);
 const itemsPerPage = 4;
 
 const filteredItems = computed(() => {
-  if (!searchQuery.value) return inventory.value;
-  const q = searchQuery.value.toLowerCase();
-  return inventory.value.filter(item => 
-    item.name.toLowerCase().includes(q) || 
-    item.plate.toLowerCase().includes(q)
-  );
+  let result = inventory.value;
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase();
+    result = result.filter(item => 
+      item.name.toLowerCase().includes(q) || 
+      item.plate.toLowerCase().includes(q)
+    );
+  }
+  if (filterType.value) {
+    result = result.filter(item => item.type === filterType.value);
+  }
+  if (filterStatus.value) {
+    result = result.filter(item => item.status === filterStatus.value);
+  }
+  return result;
 });
 
 const totalPages = computed(() => Math.ceil(filteredItems.value.length / itemsPerPage) || 1);
@@ -88,14 +103,18 @@ const setPage = (page) => { currentPage.value = page; };
           <input type="text" v-model="searchQuery" placeholder="Buscar por veículo ou placa..." @input="currentPage = 1" />
         </div>
         <div class="filter-actions">
-          <div class="dropdown">
-            <span>Todos os tipos</span>
-            <ChevronDown size="16" />
-          </div>
-          <div class="dropdown">
-            <span>Status</span>
-            <ChevronDown size="16" />
-          </div>
+          <select v-model="filterType" class="filter-select" @change="currentPage = 1">
+            <option value="">Todos os tipos</option>
+            <option value="Carro">Carro</option>
+            <option value="Moto">Moto</option>
+            <option value="Caminhão">Caminhão</option>
+          </select>
+          <select v-model="filterStatus" class="filter-select" @change="currentPage = 1">
+            <option value="">Todos os status</option>
+            <option value="Disponível">Disponível</option>
+            <option value="Em negociação">Em negociação</option>
+            <option value="Vendido">Vendido</option>
+          </select>
         </div>
       </div>
 
@@ -326,18 +345,27 @@ export default {
   gap: 12px;
 }
 
-.dropdown {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+.filter-select {
+  padding: 10px 32px 10px 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  font-family: var(--font-family);
   font-size: 0.9rem;
   color: var(--text-main);
-  font-weight: 500;
-  cursor: pointer;
   background-color: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.filter-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .vehicle-info {

@@ -11,9 +11,13 @@ const clientsData = [
   { id: 4, initials: 'AP', name: 'Ana Paula', phone: '(11) 96666-4444', email: 'ana.paula@email.com', city: 'São Paulo - SP', proposals: 1, lastActivity: 'Ontem, 14:20', color: 'purple' },
   { id: 5, initials: 'RF', name: 'Rafael Ferreira', phone: '(11) 95555-5555', email: 'rafael.ferreira@email.com', city: 'Osasco - SP', proposals: 2, lastActivity: '12/05/2024', color: 'yellow' },
   { id: 6, initials: 'JC', name: 'Juliana Costa', phone: '(11) 94444-6666', email: 'juliana.costa@email.com', city: 'São Paulo - SP', proposals: 1, lastActivity: '10/05/2024', color: 'purple' },
+  { id: 7, initials: 'PR', name: 'Pedro Rocha', phone: '(11) 93333-7777', email: 'pedro.rocha@email.com', city: 'Campinas - SP', proposals: 0, lastActivity: '09/05/2024', color: 'blue' },
+  { id: 8, initials: 'LM', name: 'Laura Mendes', phone: '(11) 92222-8888', email: 'laura.mendes@email.com', city: 'São Bernardo - SP', proposals: 4, lastActivity: '08/05/2024', color: 'green' },
+  { id: 9, initials: 'FM', name: 'Fernanda Marques', phone: '(11) 91111-9999', email: 'fernanda.marques@email.com', city: 'Osasco - SP', proposals: 2, lastActivity: '05/05/2024', color: 'yellow' },
 ];
 
 const clients = ref([...clientsData]);
+const filterCity = ref('');
 
 const showClientModal = ref(false);
 const showViewModal = ref(false);
@@ -47,13 +51,19 @@ const currentPage = ref(1);
 const itemsPerPage = 4;
 
 const filteredItems = computed(() => {
-  if (!searchQuery.value) return clients.value;
-  const q = searchQuery.value.toLowerCase();
-  return clients.value.filter(item => 
-    item.name.toLowerCase().includes(q) || 
-    item.email.toLowerCase().includes(q) ||
-    item.phone.includes(q)
-  );
+  let result = clients.value;
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase();
+    result = result.filter(item => 
+      item.name.toLowerCase().includes(q) || 
+      item.email.toLowerCase().includes(q) ||
+      item.phone.includes(q)
+    );
+  }
+  if (filterCity.value) {
+    result = result.filter(item => item.city === filterCity.value);
+  }
+  return result;
 });
 
 const totalPages = computed(() => Math.ceil(filteredItems.value.length / itemsPerPage) || 1);
@@ -89,14 +99,14 @@ const setPage = (page) => { currentPage.value = page; };
           <input type="text" v-model="searchQuery" placeholder="Buscar por nome, e-mail ou telefone..." @input="currentPage = 1" />
         </div>
         <div class="filter-actions">
-          <div class="dropdown">
-            <span>Todos os clientes</span>
-            <ChevronDown size="16" />
-          </div>
-          <div class="dropdown">
-            <span>Mais recentes</span>
-            <ChevronDown size="16" />
-          </div>
+          <select v-model="filterCity" class="filter-select" @change="currentPage = 1">
+            <option value="">Todas as cidades</option>
+            <option value="São Paulo - SP">São Paulo - SP</option>
+            <option value="Campinas - SP">Campinas - SP</option>
+            <option value="Guarulhos - SP">Guarulhos - SP</option>
+            <option value="Osasco - SP">Osasco - SP</option>
+            <option value="São Bernardo - SP">São Bernardo - SP</option>
+          </select>
         </div>
       </div>
 
@@ -306,18 +316,27 @@ const setPage = (page) => { currentPage.value = page; };
   gap: 12px;
 }
 
-.dropdown {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+.filter-select {
+  padding: 10px 32px 10px 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  font-family: var(--font-family);
   font-size: 0.9rem;
   color: var(--text-main);
-  font-weight: 500;
-  cursor: pointer;
   background-color: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.filter-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .client-info-cell {
