@@ -84,9 +84,9 @@ const navItems = [
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 24px;
+  padding: 0 24px;
+  height: 72px; /* Fixed height to match topbar */
   border-bottom: 1px solid var(--border);
-  margin-bottom: 16px;
 }
 
 .logo-icon {
