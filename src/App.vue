@@ -69,4 +69,13 @@ const isAuthRoute = computed(() => {
   padding: 32px;
   width: 100%;
 }
+
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+  .page-content {
+    padding: 16px;
+  }
+}
 </style>

@@ -173,4 +173,41 @@ const navItems = [
   background-color: var(--danger-bg);
   color: var(--danger);
 }
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+  .logo-container {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding: 16px 0;
+  }
+  .nav-menu {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 16px 0;
+    flex: none;
+    width: 100%;
+    gap: 8px;
+    border-top: 1px solid var(--border);
+  }
+  .nav-item {
+    padding: 12px;
+  }
+  .sidebar-footer {
+    border-top: none;
+    padding: 16px 0;
+  }
+  .nav-text {
+    display: none;
+  }
+}
 </style>

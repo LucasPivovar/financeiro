@@ -100,52 +100,54 @@ const setPage = (page) => { currentPage.value = page; };
         </div>
       </div>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Veículo de Interesse</th>
-            <th>Valor</th>
-            <th>Status</th>
-            <th>Criado em</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in paginatedItems" :key="item.id">
-            <td class="font-medium text-muted">{{ item.id }}</td>
-            <td>
-              <div class="client-info">
-                <span class="font-medium">{{ item.client }}</span>
-                <span class="text-xs text-muted">{{ item.phone }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="vehicle-info-sm">
-                <span class="font-medium">{{ item.vehicle }}</span>
-                <span class="text-xs text-muted">{{ item.year }}</span>
-              </div>
-            </td>
-            <td class="font-medium">{{ item.value }}</td>
-            <td>
-              <span :class="`badge badge-${item.statusColor}`">{{ item.status }}</span>
-            </td>
-            <td class="text-muted">{{ item.created }}</td>
-            <td class="actions-col">
-              <div class="actions-cell">
-                <button class="icon-btn" @click="viewProposal(item)"><Eye size="18" /></button>
-                <Dropdown :item="item" @edit="handleEdit" @delete="handleDelete" />
-              </div>
-            </td>
-          </tr>
-          <tr v-if="paginatedItems.length === 0">
-            <td colspan="7" class="text-center" style="padding: 32px; color: var(--text-muted);">
-              Nenhuma proposta encontrada para a busca "{{ searchQuery }}".
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cliente</th>
+              <th>Veículo de Interesse</th>
+              <th>Valor</th>
+              <th>Status</th>
+              <th>Criado em</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in paginatedItems" :key="item.id">
+              <td class="font-medium text-muted">{{ item.id }}</td>
+              <td>
+                <div class="client-info">
+                  <span class="font-medium">{{ item.client }}</span>
+                  <span class="text-xs text-muted">{{ item.phone }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="vehicle-info-sm">
+                  <span class="font-medium">{{ item.vehicle }}</span>
+                  <span class="text-xs text-muted">{{ item.year }}</span>
+                </div>
+              </td>
+              <td class="font-medium">{{ item.value }}</td>
+              <td>
+                <span :class="`badge badge-${item.statusColor}`">{{ item.status }}</span>
+              </td>
+              <td class="text-muted">{{ item.created }}</td>
+              <td class="actions-col">
+                <div class="actions-cell">
+                  <button class="icon-btn" @click="viewProposal(item)"><Eye size="18" /></button>
+                  <Dropdown :item="item" @edit="handleEdit" @delete="handleDelete" />
+                </div>
+              </td>
+            </tr>
+            <tr v-if="paginatedItems.length === 0">
+              <td colspan="7" class="text-center" style="padding: 32px; color: var(--text-muted);">
+                Nenhuma proposta encontrada para a busca "{{ searchQuery }}".
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="pagination">
         <span class="pagination-info">Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} até {{ Math.min(currentPage * itemsPerPage, filteredItems.length) }} de {{ filteredItems.length }} resultados</span>
@@ -262,6 +264,8 @@ const setPage = (page) => { currentPage.value = page; };
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .search-box {
@@ -374,5 +378,30 @@ const setPage = (page) => { currentPage.value = page; };
 .page-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .search-box {
+    width: 100%;
+  }
+  .filter-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .pagination {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 </style>

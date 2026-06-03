@@ -549,4 +549,33 @@ input:checked + .slider:before { transform: translateX(20px); }
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 1024px) {
+  .settings-layout {
+    grid-template-columns: 1fr;
+  }
+  .settings-nav {
+    overflow-x: auto;
+  }
+  .settings-nav nav {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+  .settings-tab {
+    white-space: nowrap;
+    width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
 </style>

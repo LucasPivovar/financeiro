@@ -62,16 +62,17 @@ const submitProposal = () => {
     </header>
 
     <div class="summary-grid">
-      <div v-for="(card, index) in summaryCards" :key="index" class="card summary-card">
-        <div class="card-icon" :class="card.color">
+      <div class="summary-card card" v-for="card in summaryCards" :key="card.title">
+        <div :class="['card-icon', card.color]">
           <component :is="card.icon" size="24" />
         </div>
         <div class="card-content">
           <h3 class="card-title">{{ card.title }}</h3>
-          <div class="card-value">{{ card.value }}</div>
-          <div class="card-change" :class="card.changeType">
-            <TrendingUp size="14" v-if="card.changeType === 'positive'" />
-            {{ card.change }}
+          <p class="card-value">{{ card.value }}</p>
+          <div class="card-change" :class="card.changeType === 'positive' ? 'text-success' : 'text-danger'">
+            <TrendingUp v-if="card.changeType === 'positive'" size="14" />
+            <TrendingDown v-else size="14" />
+            <span>{{ card.change }}</span>
           </div>
         </div>
       </div>
@@ -85,37 +86,39 @@ const submitProposal = () => {
           <a href="#" class="view-all">Ver todas</a>
         </div>
         
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Veículo</th>
-              <th>Valor do bem</th>
-              <th>Status</th>
-              <th>Atualizado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(proposal, index) in latestProposals" :key="index">
-              <td>
-                <div class="client-cell">
-                  <div class="avatar" :class="'avatar-' + proposal.color">{{ proposal.initials }}</div>
-                  <span class="client-name">{{ proposal.client }}</span>
-                </div>
-              </td>
-              <td class="vehicle-name">{{ proposal.vehicle }}</td>
-              <td class="font-medium">{{ proposal.value }}</td>
-              <td>
-                <span class="badge" :class="proposal.statusColor">{{ proposal.status }}</span>
-              </td>
-              <td class="text-muted">{{ proposal.updated }}</td>
-              <td>
-                <button class="icon-btn-small"><MoreVertical size="16" /></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Veículo</th>
+                <th>Valor do bem</th>
+                <th>Status</th>
+                <th>Atualizado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(proposal, index) in latestProposals" :key="index">
+                <td>
+                  <div class="client-cell">
+                    <div class="avatar" :class="'avatar-' + proposal.color">{{ proposal.initials }}</div>
+                    <span class="client-name">{{ proposal.client }}</span>
+                  </div>
+                </td>
+                <td class="vehicle-name">{{ proposal.vehicle }}</td>
+                <td class="font-medium">{{ proposal.value }}</td>
+                <td>
+                  <span class="badge" :class="proposal.statusColor">{{ proposal.status }}</span>
+                </td>
+                <td class="text-muted">{{ proposal.updated }}</td>
+                <td>
+                  <button class="icon-btn-small"><MoreVertical size="16" /></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Quick Actions and Inventory side -->
@@ -287,44 +290,51 @@ export default {
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
 }
 
 .summary-card {
   display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
   padding: 24px;
 }
 
 .card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  flex-shrink: 0;
 }
 
 .card-icon.purple { background-color: var(--primary-light); color: var(--primary); }
-.card-icon.green { background-color: #DCFCE7; color: #16A34A; }
 .card-icon.blue { background-color: #DBEAFE; color: #2563EB; }
+.card-icon.green { background-color: #DCFCE7; color: #16A34A; }
 .card-icon.yellow { background-color: #FEF9C3; color: #CA8A04; }
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
 .card-title {
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-muted);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .card-value {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
+  color: var(--text-main);
 }
 
 .card-change {
@@ -341,6 +351,16 @@ export default {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 24px;
+}
+
+.data-toolbar {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .card-header {
@@ -414,7 +434,27 @@ export default {
 .avatar-purple { background-color: var(--primary-light); color: var(--primary); }
 .avatar-green { background-color: #DCFCE7; color: #16A34A; }
 .avatar-blue { background-color: #DBEAFE; color: #2563EB; }
-.avatar-yellow { background-color: #FEF9C3; color: #CA8A04; }
+.client-avatar.yellow { background-color: #FEF9C3; color: #CA8A04; }
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
 
 .client-name { font-weight: 500; }
 .vehicle-name { color: var(--text-main); }

@@ -57,32 +57,34 @@ const history = [
         <a href="#" class="view-all">Ver todas</a>
       </div>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Proposta</th>
-            <th>Cliente</th>
-            <th>Valor do bem</th>
-            <th>Comissão</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in history" :key="index">
-            <td class="text-muted">{{ item.date }}</td>
-            <td>
-              <span class="proposal-id">{{ item.proposal }}</span>
-            </td>
-            <td class="font-medium">{{ item.client }}</td>
-            <td>{{ item.value }}</td>
-            <td class="font-medium">{{ item.commission }}</td>
-            <td>
-              <span class="badge" :class="item.statusColor">{{ item.status }}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Proposta</th>
+              <th>Cliente</th>
+              <th>Valor do bem</th>
+              <th>Comissão</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in history" :key="index">
+              <td class="text-muted">{{ item.date }}</td>
+              <td>
+                <span class="proposal-id">{{ item.proposal }}</span>
+              </td>
+              <td class="font-medium">{{ item.client }}</td>
+              <td>{{ item.value }}</td>
+              <td class="font-medium">{{ item.commission }}</td>
+              <td>
+                <span class="badge" :class="item.statusColor">{{ item.status }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -127,7 +129,7 @@ const history = [
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
 }
 
@@ -250,5 +252,19 @@ const history = [
 
 .font-medium {
   font-weight: 500;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 }
 </style>
