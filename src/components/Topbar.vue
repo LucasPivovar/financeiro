@@ -1,10 +1,16 @@
 <script setup>
-import { Bell } from '@lucide/vue';
+import { inject } from 'vue';
+import { Bell, Menu } from '@lucide/vue';
+
+const toggleMenu = inject('toggleMobileMenu');
 </script>
 
 <template>
   <header class="topbar">
     <div class="topbar-inner">
+      <button class="mobile-menu-btn icon-btn" @click="toggleMenu">
+        <Menu size="24" />
+      </button>
       <div class="spacer"></div>
       
       <!-- Right Actions -->
@@ -47,6 +53,17 @@ import { Bell } from '@lucide/vue';
 
 .spacer {
   flex: 1;
+}
+
+.mobile-menu-btn {
+  display: none;
+  margin-right: 16px;
+}
+
+@media (max-width: 1024px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
 }
 
 .actions {

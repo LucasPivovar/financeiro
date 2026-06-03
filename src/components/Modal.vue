@@ -57,9 +57,15 @@ defineEmits(['close']);
   width: 100%;
   max-width: 500px;
   max-height: 90vh;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: 0 auto;
+  }
 }
 
 .modal-header {
@@ -78,6 +84,7 @@ defineEmits(['close']);
 
 .modal-body {
   padding: 24px;
+  overflow-y: auto;
 }
 
 /* Transitions */

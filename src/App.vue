@@ -1,10 +1,14 @@
 <script setup>
+import { ref, provide, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import Topbar from './components/Topbar.vue'
 import Toast from './components/Toast.vue'
-import { provide, computed } from 'vue'
 import { useToast } from './composables/useToast'
-import { useRoute } from 'vue-router'
+
+const isMobileMenuOpen = ref(false);
+const toggleMobileMenu = () => { isMobileMenuOpen.value = !isMobileMenuOpen.value; };
+provide('toggleMobileMenu', toggleMobileMenu);
 
 const { addToast } = useToast()
 provide('showToast', addToast)
@@ -30,7 +34,7 @@ const isAuthRoute = computed(() => {
 
     <!-- Dashboard Layout -->
     <div v-else class="dashboard-layout">
-      <Sidebar />
+      <Sidebar :isOpen="isMobileMenuOpen" @close="isMobileMenuOpen = false" />
       <div class="dashboard-main">
         <Topbar />
         <main class="page-content">
@@ -79,9 +83,6 @@ const isAuthRoute = computed(() => {
 }
 
 @media (max-width: 1024px) {
-  .dashboard-layout {
-    flex-direction: column;
-  }
   .page-content {
     padding: 16px;
   }

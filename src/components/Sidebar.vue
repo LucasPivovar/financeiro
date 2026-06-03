@@ -14,6 +14,15 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 
+const props = defineProps({
+  isOpen: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const emit = defineEmits(['close']);
+
 const handleLogout = () => {
   router.push('/login');
 };
@@ -30,7 +39,8 @@ const navItems = [
 </script>
 
 <template>
-  <aside class="sidebar">
+  <div v-if="isOpen" class="sidebar-overlay" @click="emit('close')"></div>
+  <aside class="sidebar" :class="{ 'is-open': isOpen }">
     <div class="logo-container">
       <div class="logo-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,6 +62,7 @@ const navItems = [
         :to="item.path"
         class="nav-item"
         :class="{ active: route.path === item.path }"
+        @click="emit('close')"
       >
         <component :is="item.icon" size="20" class="nav-icon" />
         <span class="nav-text">{{ item.name }}</span>
@@ -174,40 +185,35 @@ const navItems = [
   color: var(--danger);
 }
 
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 105;
+}
+
 @media (max-width: 1024px) {
+  .sidebar-overlay {
+    display: block;
+  }
+  
   .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 260px;
+    z-index: 110;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
-  .logo-container {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding: 16px 0;
-  }
-  .nav-menu {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 16px 0;
-    flex: none;
-    width: 100%;
-    gap: 8px;
-    border-top: 1px solid var(--border);
-  }
-  .nav-item {
-    padding: 12px;
-  }
-  .sidebar-footer {
-    border-top: none;
-    padding: 16px 0;
-  }
-  .nav-text {
-    display: none;
+
+  .sidebar.is-open {
+    transform: translateX(0);
   }
 }
 </style>
