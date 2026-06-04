@@ -1,6 +1,7 @@
 <script setup>
 import { ref, inject, computed } from 'vue';
 import Modal from '../components/Modal.vue';
+import NewProposalModal from '../components/NewProposalModal.vue';
 import { 
   ShoppingCart, 
 
@@ -208,29 +209,7 @@ const submitProposal = () => {
     </div>
 
     <!-- Modal Nova Proposta -->
-    <Modal :show="showProposalModal" title="Nova Proposta" @close="showProposalModal = false">
-      <form @submit.prevent="submitProposal" style="display: flex; flex-direction: column; gap: 16px;">
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 0.85rem; font-weight: 500;">Selecione o Cliente</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-family);">
-            <option>João Silva</option>
-            <option>Maria Oliveira</option>
-          </select>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 0.85rem; font-weight: 500;">Veículo de Interesse</label>
-          <input type="text" placeholder="Ex: Toyota Corolla XEi 2.0" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-family);" />
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 0.85rem; font-weight: 500;">Valor da Proposta (R$)</label>
-          <input type="text" placeholder="Ex: 110.000,00" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-family);" />
-        </div>
-        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px;">
-          <button type="button" @click="showProposalModal = false" style="padding: 10px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); background: white; cursor: pointer;">Cancelar</button>
-          <button type="submit" class="btn-primary">Gerar Proposta</button>
-        </div>
-      </form>
-    </Modal>
+    <NewProposalModal :show="showProposalModal" @close="showProposalModal = false" @submit="submitProposal" />
   </div>
 </template>
 
